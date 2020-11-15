@@ -1,9 +1,9 @@
 {
   "images" : [
     {
-      "filename" : "tabIconHomeUnselected.png",
+      "idiom" : "universal",
       "scale" : "1x",
-      "idiom" : "universal"
+      "filename" : "tabIconHomeUnselected.png"
     },
     {
       "filename" : "tabIconHomeUnselected@2x.png",
@@ -11,9 +11,9 @@
       "idiom" : "universal"
     },
     {
+      "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "tabIconHomeUnselected@3x.png",
-      "idiom" : "universal"
+      "filename" : "tabIconHomeUnselected@3x.png"
     }
   ],
   "info" : {
