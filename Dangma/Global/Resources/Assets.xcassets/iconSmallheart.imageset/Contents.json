@@ -1,18 +1,18 @@
 {
   "images" : [
     {
-      "idiom" : "universal",
+      "scale" : "1x",
       "filename" : "iconSmallheart.png",
-      "scale" : "1x"
-    },
-    {
-      "scale" : "2x",
-      "filename" : "iconSmallheart@2x.png",
       "idiom" : "universal"
     },
     {
-      "filename" : "iconSmallheart@3x.png",
+      "filename" : "iconSmallheart@2x.png",
+      "idiom" : "universal",
+      "scale" : "2x"
+    },
+    {
       "scale" : "3x",
+      "filename" : "iconSmallheart@3x.png",
       "idiom" : "universal"
     }
   ],

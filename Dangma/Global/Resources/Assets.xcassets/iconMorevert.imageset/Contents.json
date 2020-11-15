@@ -1,19 +1,19 @@
 {
   "images" : [
     {
-      "filename" : "iconMorevert.png",
       "scale" : "1x",
-      "idiom" : "universal"
-    },
-    {
-      "scale" : "2x",
-      "filename" : "iconMorevert@2x.png",
+      "filename" : "iconMorevert.png",
       "idiom" : "universal"
     },
     {
       "idiom" : "universal",
-      "filename" : "iconMorevert@3x.png",
-      "scale" : "3x"
+      "scale" : "2x",
+      "filename" : "iconMorevert@2x.png"
+    },
+    {
+      "scale" : "3x",
+      "idiom" : "universal",
+      "filename" : "iconMorevert@3x.png"
     }
   ],
   "info" : {

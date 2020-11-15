@@ -1,19 +1,19 @@
 {
   "images" : [
     {
-      "filename" : "tabIconChatSelected.png",
       "scale" : "1x",
-      "idiom" : "universal"
-    },
-    {
-      "scale" : "2x",
-      "filename" : "tabIconChatSelected@2x.png",
-      "idiom" : "universal"
+      "idiom" : "universal",
+      "filename" : "tabIconChatSelected.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "3x",
-      "filename" : "tabIconChatSelected@3x.png"
+      "scale" : "2x",
+      "filename" : "tabIconChatSelected@2x.png"
+    },
+    {
+      "idiom" : "universal",
+      "filename" : "tabIconChatSelected@3x.png",
+      "scale" : "3x"
     }
   ],
   "info" : {
