@@ -11,13 +11,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
    
     
     @IBOutlet weak var topView: UIView!
+    @IBOutlet weak var announcementView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     
+    let layout = UICollectionViewFlowLayout()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-      
-        let layout = UICollectionViewFlowLayout()
+        
         layout.scrollDirection = .vertical
         // cell 왼쪽 - 셀 사이 - cell 오른쪽 간격이 모두 같게 조절 (cell 하나가 162로 고정되어있음)
         layout.sectionInset = UIEdgeInsets(top: 0, left: (view.frame.width - 324)/3, bottom: 0, right: (view.frame.width - 324)/3)
@@ -31,7 +32,14 @@ class ViewController: UIViewController, UICollectionViewDelegate, UICollectionVi
         collectionView.backgroundColor = .white
     }
 
-
+    // 공지사항 x 버튼 눌렀을 때
+    @IBAction func closeClicked(_ sender: Any) {
+        // 공지사항 뷰 없애기
+        announcementView.removeFromSuperview()
+        // collectionView의 top을 우리동네 뷰의 bottom에 맞춘다.
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.topAnchor.constraint(equalTo: self.topView.bottomAnchor).isActive = true
+    }
     
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
