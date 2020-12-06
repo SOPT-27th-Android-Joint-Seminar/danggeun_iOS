@@ -6,3 +6,19 @@
 //
 
 import Foundation
+
+// MARK: - GenericResponse
+struct GenericResponse<T: Codable>: Codable {
+    let status: Int
+    let success: Bool
+    let message: String
+    let data: [Item]
+    
+}
+
+struct DetailResponse<T:Codable>: Codable {
+    let status: Int
+    let success: Bool
+    let message: String
+    let data: [ItemDetail]
+}

@@ -5,11 +5,16 @@
 //  Created by 오준현 on 2020/11/14.
 //
 
+
+
+
 import UIKit
 import MessageUI
 
 class DetailViewController: UIViewController {
     
+    var index = 0
+    var detailData = [ItemDetail]()
     let scrollView = UIScrollView()
     
     let containerView = UIView()
@@ -169,7 +174,7 @@ class DetailViewController: UIViewController {
                                        green: 153/255,
                                        blue: 153/255,
                                        alpha: 1)
-
+        
         return label
     }()
     
@@ -185,7 +190,7 @@ class DetailViewController: UIViewController {
                                        alpha: 1)
         return label
     }()
-
+    
     let chatLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -207,7 +212,7 @@ class DetailViewController: UIViewController {
                                        green: 153/255,
                                        blue: 153/255,
                                        alpha: 1)
-
+        
         return label
     }()
     
@@ -220,10 +225,10 @@ class DetailViewController: UIViewController {
                                        green: 153/255,
                                        blue: 153/255,
                                        alpha: 1)
-
+        
         return label
     }()
-
+    
     
     let contentLabel: UILabel = {
         let label = UILabel()
@@ -291,22 +296,25 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(index)
         
         view.backgroundColor = .white
         self.navigationController?.interactivePopGestureRecognizer?.delegate = self
-
-        layout()
         
+        layout()
         scrollView.delegate = self
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(DetailCVCell.self,
                                 forCellWithReuseIdentifier: DetailCVCell.reuseIdentifier)
+       
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         navigation()
+        loadData()
+        
     }
     
     func navigation() {
@@ -317,8 +325,12 @@ class DetailViewController: UIViewController {
     func didTapBackButton() {
         self.navigationController?.popViewController(animated: true)
     }
+    
+    
+    
+    
+    
 }
-
 extension DetailViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         
@@ -342,6 +354,7 @@ extension DetailViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+
 extension DetailViewController: UICollectionViewDelegate { }
 
 extension DetailViewController: UICollectionViewDataSource {
@@ -350,6 +363,7 @@ extension DetailViewController: UICollectionViewDataSource {
                         numberOfItemsInSection section: Int) -> Int {
         return 6
     }
+    
     
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -377,7 +391,7 @@ extension UILabel {
             self.attributedText = attributeString
         }
     }
-
+    
     func setTextWithLineHeight(text: String?, lineHeight: CGFloat) {
         if let text = text {
             let style = NSMutableParagraphStyle()
@@ -387,13 +401,49 @@ extension UILabel {
             let attributes: [NSAttributedString.Key: Any] = [
                 .paragraphStyle: style
             ]
-                
+            
             let attrString = NSAttributedString(string: text,
                                                 attributes: attributes)
             self.attributedText = attrString
         }
     }
-
+    
 }
 
 extension DetailViewController: UIGestureRecognizerDelegate {}
+
+
+extension DetailViewController {
+    
+    func loadData() {
+        DetailService.shared.load(index: index) { (networkResult) -> (Void) in
+            switch networkResult {
+            case .success(let data):
+                if let loadData = data as? [ItemDetail] {
+                    print("success")
+                    print(loadData)
+                    self.detailData = loadData
+                    self.reload()
+                }
+            case .requestErr( _):
+                print("requestErr")
+            case .pathErr:
+                print("pathErr")
+            case .serverErr:
+                print("serverErr")
+            case .networkFail:
+                print("networkFail")
+            }
+            
+        }
+    }
+    
+    func reload() {
+        nameLabel.text = detailData[index-1].nickName
+        localLabel.text = detailData[index-1].local
+        temperatureLabel.text = "\(detailData[index-1].manner)" + "℃"
+        contentLabel.text = detailData[index-1].detail
+        
+    }
+}
+

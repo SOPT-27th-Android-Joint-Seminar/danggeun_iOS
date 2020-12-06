@@ -8,16 +8,116 @@
 import UIKit
 
 class ViewController: UIViewController {
-   
+    
     
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var announcementView: UIView!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    let layout = UICollectionViewFlowLayout()
+    var homeData = [Item]()
     
+    let layout = UICollectionViewFlowLayout()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loadData()
+        fetchCollectionView()
+       
+    
+        
+    }
+    
+    
+    // 공지사항 x 버튼 눌렀을 때
+    @IBAction func closeClicked(_ sender: Any) {
+        // 공지사항 뷰 없애기
+        announcementView.removeFromSuperview()
+        // collectionView의 top을 우리동네 뷰의 bottom에 맞춘다.
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.topAnchor.constraint(equalTo: self.topView.bottomAnchor).isActive = true
+    }
+    
+}
+
+extension ViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        didSelectItemAt indexPath: IndexPath) {
+        let vc = DetailViewController()
+        vc.index = homeData[indexPath.row].idx
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+}
+
+extension ViewController: UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        numberOfItemsInSection section: Int) -> Int {
+        return homeData.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView,
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        
+        let cell: HomeCollectionViewCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
+        cell.nameLabel.text = homeData[indexPath.row].productName
+        let time: String = (homeData[indexPath.row].createdAt)
+        
+        cell.whereLabel.text = (homeData[indexPath.row].local ?? "") + " · " + time.timeAgoSince(time.getDateFormat(time: time)!)
+        cell.moneyLabel.text = DecimalWon(value: homeData[indexPath.row].price)
+        cell.heartLabel.text = "\(String(describing: homeData[indexPath.row].likeNum))"
+        cell.commentsLabel.text = "\(String(describing: homeData[indexPath.row].commentNum))"
+        
+        let url = URL(string: homeData[indexPath.row].imgLink)
+        var image: UIImage?
+        DispatchQueue.global().async {
+            guard let data = try? Data(contentsOf: url!) else {
+                return
+            }
+            DispatchQueue.main.async {
+                image = UIImage(data: data)
+                cell.itemImage.image = image
+            }
+        }
+        return cell
+        
+    }
+}
+
+
+extension ViewController: UICollectionViewDelegateFlowLayout { }
+
+extension ViewController {
+    func loadData() {
+        HomeService.shared.load() { (networkResult) -> (Void) in
+            switch networkResult {
+            case .success(let data):
+                if let loadData = data as? [Item] {
+                    print("success")
+                    //print(homeData)
+                    self.homeData = loadData
+                    self.collectionView.reloadData()
+                    
+                }
+            case .requestErr( _):
+                print("requestErr")
+            case .pathErr:
+                print("pathErr")
+            case .serverErr:
+                print("serverErr")
+            case .networkFail:
+                print("networkFail")
+            }
+            
+        }
+    }
+}
+
+
+extension ViewController {
+    func fetchCollectionView() {
+        // MARK: Layout
         
         layout.scrollDirection = .vertical
         // cell 왼쪽 - 셀 사이 - cell 오른쪽 간격이 모두 같게 조절 (cell 하나가 162로 고정되어있음)
@@ -36,51 +136,16 @@ class ViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.backgroundColor = .white
     }
-
-    // 공지사항 x 버튼 눌렀을 때
-    @IBAction func closeClicked(_ sender: Any) {
-        // 공지사항 뷰 없애기
-        announcementView.removeFromSuperview()
-        // collectionView의 top을 우리동네 뷰의 bottom에 맞춘다.
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.topAnchor.constraint(equalTo: self.topView.bottomAnchor).isActive = true
-    }
-    
 }
 
-extension ViewController: UICollectionViewDelegate {
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        didSelectItemAt indexPath: IndexPath) {
-        let vc = DetailViewController()
-        
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
 
+
+func DecimalWon(value: Int) -> String{
+    let numberFormatter = NumberFormatter()
+    numberFormatter.numberStyle = .decimal
+    let result = numberFormatter.string(from: NSNumber(value: value))! + "원"
+    
+    return result
 }
 
-extension ViewController: UICollectionViewDataSource {
-    
-    func collectionView(_ collectionView: UICollectionView,
-                        numberOfItemsInSection section: Int) -> Int {
-        6
-    }
 
-    func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let cell: HomeCollectionViewCell = collectionView.dequeueReusableCell(forIndexPath: indexPath)
-        
-        cell.itemImage.image = itemData[indexPath.row].image
-        cell.nameLabel.text = itemData[indexPath.row].name
-        cell.whereLabel.text = (itemData[indexPath.row].location!) + " · " + (itemData[indexPath.row].time!)
-        cell.moneyLabel.text = itemData[indexPath.row].howMuch
-        cell.heartLabel.text = "\(String(describing: itemData[indexPath.row].heart ?? 0))"
-        cell.commentsLabel.text = "\(String(describing: itemData[indexPath.row].comments ?? 0))"
-        
-        return cell
-    }
-
-}
-
-extension ViewController: UICollectionViewDelegateFlowLayout { }
