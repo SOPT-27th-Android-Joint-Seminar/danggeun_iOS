@@ -423,6 +423,7 @@ extension DetailViewController {
                     print("success")
                     print(loadData)
                     self.detailData = loadData
+                    // 데이터를 불러온 후 리로드
                     self.reload()
                 }
             case .requestErr( _):
@@ -443,7 +444,11 @@ extension DetailViewController {
         localLabel.text = detailData[index-1].local
         temperatureLabel.text = "\(detailData[index-1].manner)" + "℃"
         contentLabel.text = detailData[index-1].detail
-        
+        categoryLabel.text = detailData[index-1].category + "·"
+        chatLabel.text = "채팅 \(detailData[index-1].commentNum)·"
+        interestingLabel.text = " 관심 \(detailData[index-1].likeNum)·"
+        lookLabel.text = " 조회 \(detailData[index-1].viewCnt)"
+        priceLabel.text = DecimalWon(value: detailData[index-1].price)
     }
 }
 

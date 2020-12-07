@@ -25,7 +25,7 @@ struct HomeService {
                     return
                 }
                 
-                completion(judgeSignInData(status: statusCode, data: data))
+                completion(judgeData(status: statusCode, data: data))
                 
             case .failure(let err):
                 print(err)
@@ -34,7 +34,7 @@ struct HomeService {
         }
     }
     
-    private func judgeSignInData(status: Int, data: Data) -> NetworkResult<Any> {
+    private func judgeData(status: Int, data: Data) -> NetworkResult<Any> {
         let decoder = JSONDecoder()
         guard let decodedData = try? decoder.decode(GenericResponse<Item>.self, from: data) else {
             return .pathErr

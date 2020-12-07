@@ -22,8 +22,6 @@ class ViewController: UIViewController {
         
         loadData()
         fetchCollectionView()
-       
-    
         
     }
     
@@ -44,6 +42,7 @@ extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView,
                         didSelectItemAt indexPath: IndexPath) {
         let vc = DetailViewController()
+        // index 값을 다음 뷰로 넘겨준다.
         vc.index = homeData[indexPath.row].idx
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -69,6 +68,7 @@ extension ViewController: UICollectionViewDataSource {
         cell.heartLabel.text = "\(String(describing: homeData[indexPath.row].likeNum))"
         cell.commentsLabel.text = "\(String(describing: homeData[indexPath.row].commentNum))"
         
+        // url 이미지 불러오기 - 비동기
         let url = URL(string: homeData[indexPath.row].imgLink)
         var image: UIImage?
         DispatchQueue.global().async {
@@ -85,8 +85,9 @@ extension ViewController: UICollectionViewDataSource {
     }
 }
 
-
 extension ViewController: UICollectionViewDelegateFlowLayout { }
+
+// MARK: Server Connect
 
 extension ViewController {
     func loadData() {
@@ -114,10 +115,10 @@ extension ViewController {
     }
 }
 
+// MARK: Layout
 
 extension ViewController {
     func fetchCollectionView() {
-        // MARK: Layout
         
         layout.scrollDirection = .vertical
         // cell 왼쪽 - 셀 사이 - cell 오른쪽 간격이 모두 같게 조절 (cell 하나가 162로 고정되어있음)
